@@ -2,17 +2,15 @@ import speech_recognition as sr
 import json
 import os
 
+from Lumen.Resources.ConfigLoader import LoadConfig
+
 class SpeechHandler:
     def __init__(self):
         self.recognizer = sr.Recognizer()
         self.recognizer.energy_threshold = 3000
 
-        current_directory = os.path.dirname(os.path.abspath(__file__))
-        config_path = os.path.join(current_directory, '..', 'config.json')
-        
-        with open(config_path, 'r') as file:
-            config = json.load(file)
-            self.activation_word = config.get('name', '').lower()  # Use a default empty string if not found
+        self.activation_word = LoadConfig().get('name', '').lower()
+        self._last_sentence = ""
 
     def check_activation_word(self, raw_audio_data):
         print("Listening...")
@@ -22,6 +20,8 @@ class SpeechHandler:
                 audio = self.recognizer.listen(source2, timeout=5, phrase_time_limit=5)
 
                 detected_text = self.recognizer.recognize_google(audio)
+                self._last_sentence = detected_text 
+
                 print(detected_text)
                 if self.activation_word in detected_text.lower():
                     return True
@@ -32,3 +32,12 @@ class SpeechHandler:
         except Exception as e:
             print("Error:", e)
             return False
+
+    def get_last_sentence(self):
+        """
+        Returns the most recent sentence recognized by the SpeechHandler.
+
+        Returns:
+        - A string containing the last recognized sentence. Empty string if no sentence has been recognized yet.
+        """
+        return self._last_sentence

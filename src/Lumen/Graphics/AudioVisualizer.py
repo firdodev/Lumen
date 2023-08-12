@@ -2,8 +2,10 @@ import pygame
 import pyaudio
 import numpy as np
 import speech_recognition as sr
-from Lumen.Core.SpeechHandler import SpeechHandler
 import threading
+from Lumen.Core.SpeechHandler import SpeechHandler
+from Lumen.Resources.Font import LoadFont 
+from Lumen.Resources.ConfigLoader import LoadConfig
 
 
 class AudioVisualizer:
@@ -33,6 +35,17 @@ class AudioVisualizer:
         self.viz_surface = pygame.Surface((self.width, self.height), flags=pygame.SRCALPHA)
         self.bloom_surface = pygame.Surface((self.width, self.height), flags=pygame.SRCALPHA)
 
+        self.primary_color = (0, 150, 255)  # A deep shade of blue
+        self.secondary_color = (200, 100, 255)  # A shade of purple
+
+        self.font = LoadFont('Poppins-Regular.ttf', 25)
+        self.status_label = self.font.render('Say ' + LoadConfig().get('name', '') + " to activate", True, self.primary_color)
+
+        self.current_alpha = 0  # Current alpha value for fading in
+        self.alpha_increment = 15  # Faster alpha increment value
+        self.status_surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)  # Surface for the status label
+        self.last_sentence = ""  # The last sentence spoken
+
         self.prev_points = []
 
     def clamp_color(self, value):
@@ -42,14 +55,12 @@ class AudioVisualizer:
         return (1 - np.cos(2 * np.pi * n / N)) / 2
 
     def gradient_color(self, value):
-        r = int(255 * abs(value))
-        g = 255 - r
-        b = 255 - r
-
-        r = self.clamp_color(r)
-        g = self.clamp_color(g)
-        b = self.clamp_color(b)
-        return 0, 255, 255
+        alpha = abs(value)
+        r = int((1 - alpha) * self.primary_color[0] + alpha * self.secondary_color[0])
+        g = int((1 - alpha) * self.primary_color[1] + alpha * self.secondary_color[1])
+        b = int((1 - alpha) * self.primary_color[2] + alpha * self.secondary_color[2])
+        
+        return r, g, b
 
     def draw_line(self, x1, y1, x2, y2, intensity):
         color = (0, 255, 255)
@@ -57,8 +68,8 @@ class AudioVisualizer:
         pygame.draw.line(self.viz_surface, color, (x1, y1), (x2, y2), width)
 
     def draw_bezier_curve(self, points, intensity):
-        color = (71, 126, 189)
-        width = int(3 * (intensity + 2) / 3)  # Modify this formula as needed to adjust the effect
+        color = self.gradient_color(intensity)
+        width = int(3 * (intensity + 2) / 3)
         curve_points = self.bezier_curve(self.viz_surface, color, points, width)
         return curve_points[-1]
     
@@ -111,6 +122,24 @@ class AudioVisualizer:
 
         
         if self.activate_visualization:
+            # If the sentence has changed, reset the animation
+            new_sentence = self.speech_handler.get_last_sentence()
+            if new_sentence != self.last_sentence:
+                self.last_sentence = new_sentence
+                self.current_alpha = 0
+
+            # Render the last sentence with the current alpha value
+            self.status_label = self.font.render(self.last_sentence, True, self.primary_color)
+            self.status_label.set_alpha(self.current_alpha)
+            
+            label_position = (10, 10)  # Adjust this to your desired position
+            self.status_surface.fill((0, 0, 0, 0))  # Clear the status surface
+            self.status_surface.blit(self.status_label, label_position)
+            
+            # Increment the alpha value
+            self.current_alpha += self.alpha_increment
+            if self.current_alpha > 255:
+                self.current_alpha = 255  # Cap at fully opaque
             avg_audio_data = [np.mean(audio_data[i:i+10]) for i in range(0, len(audio_data), 100)]
             smoothed_data = self.smooth_data(avg_audio_data, window_size=8)
 
@@ -138,7 +167,13 @@ class AudioVisualizer:
             self.apply_bloom()
 
         else:
-            a = pygame.draw.line(self.screen, (71, 126, 189, 10), (self.left_bound, self.height / 2), (self.right_bound, self.height / 2), 3)
+            self.status_label = self.font.render('Say ' + LoadConfig().get('name', '') + ' to activate', True, self.primary_color)
+            pygame.draw.line(self.screen, self.primary_color, (self.left_bound, self.height / 2), (self.right_bound, self.height / 2), 3)
+
+        
+        # Draw status label at the top center
+        label_pos = (self.width - self.status_label.get_width()) / 2, 20
+        self.screen.blit(self.status_label, label_pos)
 
         
 
