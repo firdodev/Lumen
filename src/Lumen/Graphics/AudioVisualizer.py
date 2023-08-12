@@ -112,6 +112,8 @@ class AudioVisualizer:
     def background_recognition(self, raw_audio_data):
         if self.speech_handler.check_activation_word(raw_audio_data):
             self.activate_visualization = True
+        elif self.speech_handler.get_last_sentence() == 'bye':
+            self.activate_visualization = False
 
 
     def update_visualization(self):
