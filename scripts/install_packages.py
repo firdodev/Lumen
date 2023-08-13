@@ -2,7 +2,7 @@ import subprocess
 import pkg_resources
 
 # List of required packages
-REQUIRED_PACKAGES = ["pyaudio", "numpy", "pygame", "SpeechRecognition"]
+REQUIRED_PACKAGES = ["pyaudio", "numpy", "pygame", "SpeechRecognition", "openai"]
 
 installed_packages = {pkg.key for pkg in pkg_resources.working_set}
 
