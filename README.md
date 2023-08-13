@@ -1,44 +1,60 @@
-# Lumen
+<p align="center">
+  <img src=".gitassets/Lumen.gif" alt="Description of GIF" loop="true" width="70%">
+</p>
 
-## Introduction
+<h1 align="center">Lumen</h1>
+<h3 align="center">Your AI Personal Assistant for PC</h3>
 
-Lumen is a AI personal assistant for pc which will help you with daily tasks and if you need everything also in real life using camera view. It can also interact with devices that are connected to lumen.
+---
+
+### 🌟 Introduction
+
+Lumen is an **AI personal assistant** tailored for PCs. It's designed to assist with daily tasks, and when paired with a camera, it can aid in real-life scenarios. Additionally, Lumen can seamlessly interact with devices connected to it.
+
+---
 
 
-## How to setup **Lumen**
+### 🚀 How to Setup
 
-1. First you need to install the python packages for *Lumen* to work. Open your terminal and write:
-    ```bash
-    python .\scripts\install_packages.py
-    ```
-    This will install every package that *Lumen* needs.
+**1. Install Python Packages:**
 
-2. Add your api key from OpenAi into <a src="src/Lumen/config.json" >config.json</a>
+Before you start, ensure you have the necessary python packages. In your terminal, execute:
 
-    ```json
-    {
+```bash
+python .\scripts\install_packages.py
+```
+
+This will install every package that *Lumen* needs.
+
+**2. Configure API Key:**
+
+Insert your OpenAi API key in the <a href="src/Lumen/config.json">config.json</a> file.
+
+```json
+{
     "name": "Lumen",
     "created": "12-8-2023",
     "username": "User",
     "api" : "API_HERE"
-    }
-    ```
+}
+```
 
-2. Run the LumenApp.py
-    ```bash
-    python .\src\LumenApp.py
-    ```
+**3. Launch Lumen:**
 
-## How to use **Lumen**
+```bash
+python .\src\LumenApp.py
+```
 
-When Lumen starts and everything is loaded fully you need to activate it for her to listen to you. To activate Lumen you need to say *Lumen* in your Microphone. Than Lumen will listen to your prompts and respond to it. 
+### 🎙️ How to Use **Lumen**
 
-To deactivate Lumen you just need to say *Bye*.
+After Lumen is fully initialized, activate it by saying **"Lumen"** into your microphone. Lumen will then listen and respond to your prompts.
 
-## Community
-We are open for contribution in our project.
+🔴 To deactivate Lumen, simply say **"Bye"**.
 
-## Licesne
+### 💼 Community
+We're passionate about collaboration! Feel free to contribute to our project and help us enhance Lumen's capabilities.
+
+### 📜 License
 
 MIT License
 
@@ -61,3 +77,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+<p align="center">
+    ⚡ Powered by Lumen & OpenAI & UnyoCorp ⚡
+</p>
