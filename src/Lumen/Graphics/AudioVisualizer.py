@@ -41,6 +41,9 @@ class AudioVisualizer:
         self.font = LoadFont('Poppins-Regular.ttf', 25)
         self.status_label = self.font.render('Say ' + LoadConfig().get('name', '') + " to activate", True, self.primary_color)
 
+        self.ai_response_label = self.font.render('', True, self.primary_color)
+        self.ai_response_surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+
         self.current_alpha = 0  # Current alpha value for fading in
         self.alpha_increment = 15  # Faster alpha increment value
         self.status_surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)  # Surface for the status label
@@ -115,6 +118,10 @@ class AudioVisualizer:
         elif self.speech_handler.get_last_sentence() == 'bye':
             self.activate_visualization = False
 
+    def update_lumen_response(self, text):
+        self.ai_response_label = self.font.render(text, True, self.primary_color)
+
+
 
     def update_visualization(self):
         raw_audio_data = self.stream.read(4096)
@@ -168,6 +175,8 @@ class AudioVisualizer:
 
             self.apply_bloom()
 
+            self.update_lumen_response(self.speech_handler.response.last_response[3:])
+
         else:
             self.status_label = self.font.render('Say ' + LoadConfig().get('name', '') + ' to activate', True, self.primary_color)
             pygame.draw.line(self.screen, self.primary_color, (self.left_bound, self.height / 2), (self.right_bound, self.height / 2), 3)
@@ -176,6 +185,10 @@ class AudioVisualizer:
         # Draw status label at the top center
         label_pos = (self.width - self.status_label.get_width()) / 2, 20
         self.screen.blit(self.status_label, label_pos)
+
+        # Draw AI response label at the bottom center
+        label_pos_bottom = (self.width - self.ai_response_label.get_width()) / 2, self.height - self.ai_response_label.get_height() - 20
+        self.screen.blit(self.ai_response_label, label_pos_bottom)
 
         
 

@@ -13,6 +13,17 @@ Lumen is a AI personal assistant for pc which will help you with daily tasks and
     ```
     This will install every package that *Lumen* needs.
 
+2. Add your api key from OpenAi into <a src="src/Lumen/config.json" >config.json</a>
+
+    ```json
+    {
+    "name": "Lumen",
+    "created": "12-8-2023",
+    "username": "User",
+    "api" : "API_HERE"
+    }
+    ```
+
 2. Run the LumenApp.py
     ```bash
     python .\src\LumenApp.py
