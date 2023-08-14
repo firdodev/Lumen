@@ -79,5 +79,4 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 <p align="center">
-    ⚡ Powered by Lumen & OpenAI & UnyoCorp ⚡
 </p>
